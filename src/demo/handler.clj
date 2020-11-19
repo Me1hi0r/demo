@@ -1,11 +1,13 @@
 (ns demo.handler
-  (:require [compojure.core :refer :all]
+  (:require [ring.adapter.jetty :refer [run-jetty]]
+            [compojure.core :refer [defroutes GET]]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
-(defroutes app-routes
-  (GET "/" [] "Hello World")
-  (route/not-found "Not Found"))
+(defroutes route
+  (GET "/" _ "ok"))
 
-(def app
-  (wrap-defaults app-routes site-defaults))
+(def server
+  (run-jetty #'route {:port 8081 :join? false}))
+
+(.stop server)
